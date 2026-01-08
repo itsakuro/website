@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- INTER BY RSMS -->
+        <link rel="preconnect" href="https://rsms.me/">
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css"> 
+
+        <!-- CSS --> 
+        <link rel="stylesheet" type="text/css" href="../main.css">
+        <link rel="stylesheet" type="text/css" href="../src/css/musicView.css">
+    
+
+        <!-- SCRIPTS -->
+        <script src="../src/scripts/greet.js" defer="true"></script>
+        <script src="../src/scripts/nowplaying.js" defer="true"></script>
+
+        <!-- METADATA -->
+        <link rel="icon" type="image/png" href="../assets/images/Icon.png">
+        <title>Music — Jason Sika</title>
+    </head>
+    
+    <body>
+        <main>
+            <div class="top">
+                <div class="text">
+            <div class="hello-container">
+                <h1 class="Title" id="titleID">
+                Music
+                </h1>
+            </div>   
+                <p class="Description">Latest/Now Playing Song list from https://last.fm</p>  
+            </div>
+            </div>
+
+            <div class="songView">
+                <div class="gridItem" id="nowplaying" onclick="location.href='music.html'">
+                    <div class="gridTop">
+                        <h1 class="gridTitle">now</h1>
+                        <h2 class="gridTitle">Playing</h2>
+                    </div>
+                    <div class="gridBottom" id="marquee">
+                            <div class="marqueeContent">
+                                <h1 class="gridTitle" id="songname">songname</h1>
+                                <h2 class="gridTitle" id="artist">Artist</h2>
+                            </div>
+                    </div>
+                </div>
+                <div class="previousSongs" id="previousSongs">
+                    <!-- previous tracks are rendered here by src/scripts/nowplaying.js -->
+                </div>
+            </div>
+            <footer>
+                <p class="footerTitle">JASON SIKA</p>
+                <p class="footerDescription">&copy; All rights reserved, 2026</p>
+            </footer>
+        </main>
+    </body>
+</html>
