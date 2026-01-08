@@ -64,9 +64,9 @@
 }
 
 .songCover {
-    width: 100px;
-    height: 100px;
-    flex: 0 0 100px;
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
     object-fit: cover;
     background-color: #111;
 }
