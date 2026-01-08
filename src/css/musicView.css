@@ -53,19 +53,28 @@
 }
 
 .songEntry {
+    transform: translateY(0);
+    transition: 0.2s ease;
     height: 60px !important;
     width: 100%;
     display: flex;
     flex-direction: row;
-.nowCol {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
     align-items: center;
     gap: 12px;
     text-align: left;
     padding: 0;
+
+    .nowCol {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.songEntry:hover {
+    transform: translateX(20px) scale(1.1);
+    transition: 0.3s ease;
+    cursor: pointer;
 }
 
 .songCover {
