@@ -1,7 +1,7 @@
 /* if anyone is reading this, this is all made with AI like idk anything about what this is doing and this is a GET key so its safe i think? */
 const API_URL = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=BoochySans&api_key=fb8acb70098630643d13070b58760262&format=json';
 const ITUNES_SEARCH = 'https://itunes.apple.com/search';
-const POLL_INTERVAL_MS = 5_000;
+const POLL_INTERVAL_MS = 10_000;
 const FALLBACK = { song: 'Song', artist: 'Artist', image: '' };
 const PREV_MAX = 6;
 
