@@ -57,6 +57,11 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+.nowCol {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
     align-items: center;
     gap: 12px;
     text-align: left;
@@ -69,6 +74,18 @@
     flex: 0 0 60px;
     object-fit: cover;
     background-color: #111;
+}
+.nowLyrics {
+    width: 405px;
+    max-height: 220px;
+    overflow: auto;
+    padding: 12px;
+    background: linear-gradient(180deg, rgba(20,20,20,0.6), rgba(20,20,20,0.4));
+    color: #eaeaea;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    border-radius: 4px;
 }
 
 .songText {
@@ -117,7 +134,7 @@
 }
 
 .marqueeContent {
-    width: 100%;
+    width: max-content;
     display: flex;
     flex-direction: row;
     animation: marquee 10s linear infinite;

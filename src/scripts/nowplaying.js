@@ -6,6 +6,8 @@ const FALLBACK = { song: 'Song', artist: 'Artist', image: '' };
 const PREV_MAX = 3;
 
 const artworkCache = new Map();
+// when lyrics are found for a song, lock updates until the song changes
+let lockedSongKey = null;
 
 async function fetchAppleArtwork(artist = '', track = '') {
     const key = `${artist}::${track}`;
@@ -100,6 +102,39 @@ async function fetchNowPlaying() {
     }
 }
 
+async function fetchLrclibLyrics(artist = '', track = '') {
+    try {
+        const q = encodeURIComponent(`${artist} ${track}`.trim());
+        const url = `https://lrclib.net/api/search?q=${q}`;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) return '';
+        const data = await res.json();
+
+        if (!Array.isArray(data) || data.length === 0) return '';
+        const rec = data[0];
+
+        if (rec.plainLyrics) return rec.plainLyrics;
+        if (rec.syncedLyrics) return rec.syncedLyrics;
+
+        if (rec.id) {
+            try {
+                const r2 = await fetch(`https://lrclib.net/api/get/${rec.id}`, { cache: 'no-store' });
+                if (r2.ok) {
+                    const d2 = await r2.json();
+                    return d2.plainLyrics || d2.syncedLyrics || '';
+                }
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        return '';
+    } catch (err) {
+        console.warn('fetchLrclibLyrics failed:', err);
+        return '';
+    }
+}
+
 async function renderPreviousTracks(tracks = []) {
     const container = document.querySelector('.previousSongs#previousSongs');
     if (!container) return;
@@ -155,6 +190,12 @@ async function renderPreviousTracks(tracks = []) {
 async function updateNowPlayingElements() {
     const state = await fetchNowPlaying();
 
+    const currentKey = `${(state.artist||'').trim()}::${(state.song||'').trim()}`;
+    // if locked on this same song, skip updating to avoid extra requests
+    if (lockedSongKey && lockedSongKey === currentKey) return;
+    // if locked but the song changed, clear the lock and continue
+    if (lockedSongKey && lockedSongKey !== currentKey) lockedSongKey = null;
+
     // attempt to get Apple Music artwork for the current track
     const appleArt = await fetchAppleArtwork(state.artist, state.song);
     if (appleArt) state.image = appleArt;
@@ -178,6 +219,24 @@ async function updateNowPlayingElements() {
 
     // populate previous tracks on the music page (or any page with .previousSongs)
     await renderPreviousTracks(state.tracks);
+
+    // fetch and display lyrics (if the music page has a lyrics container)
+    try {
+        const lyricsEl = document.querySelector('#nowLyrics');
+        if (lyricsEl) {
+            lyricsEl.textContent = 'Loading lyrics...';
+            const lyrics = await fetchLrclibLyrics(state.artist, state.song);
+            if (lyrics) {
+                lyricsEl.textContent = lyrics;
+                // lock updates for this song until it changes
+                lockedSongKey = `${(state.artist||'').trim()}::${(state.song||'').trim()}`;
+            } else {
+                lyricsEl.textContent = 'No lyrics found on LRCLIB.';
+            }
+        }
+    } catch (err) {
+        console.warn('updating lyrics failed:', err);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
