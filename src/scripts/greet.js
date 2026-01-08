@@ -45,14 +45,13 @@
             const lang = languages[index];
             if (lang.lang === "Ewe") {
                 descText.style.opacity = '1';
+                descText.textContent = `Welcome in ${lang.lang}`;
             } else if (lang.lang === "English") {
                 descText.style.opacity = '0';
-            }
-            if (lang.text === "Salut") {
+            } else if (lang.text === "Salut") {
                 descText.style.opacity = '1';
                 descText.textContent = `Hi in ${lang.lang}`;
-            }
-            else { 
+            } else if (lang.text === "Bonjour") { 
                 descText.style.opacity = '1';
                 descText.textContent = `Hello in ${lang.lang}`;
             }
