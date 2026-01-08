@@ -73,7 +73,7 @@
 
 .songText {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 4px;
     overflow: hidden;
 }
