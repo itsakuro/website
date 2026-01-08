@@ -1,6 +1,6 @@
 .gridItem {
-    height: 405px;
-    width: 405px;
+    height: 405px !important;
+    width: 405px !important;
     background-color: #1E1E1E;
     border-radius: 0px;
     border-width: 1px;
@@ -45,6 +45,7 @@
 }
 
 .previousSongs {
+    width: 300px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -52,21 +53,45 @@
 }
 
 .songEntry {
-    align-items: left !important;
-    text-align: left !important;
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 0;
+}
+
+.songCover {
+    width: 100px;
+    height: 100px;
+    flex: 0 0 100px;
+    object-fit: cover;
+    background-color: #111;
+}
+
+.songText {
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    gap: 4px;
+    overflow: hidden;
 }
 
 .songEntry h1 {
     font-weight: 800;
     font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .songEntry h2 {
     font-weight: 500;
     font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

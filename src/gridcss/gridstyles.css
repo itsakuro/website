@@ -87,6 +87,25 @@
 }
 
 #about {
+    background-color: transparent;
     background-image: url('../images/pfp.png') !important;
+    background-size: cover;
+}
+
+#support {
+    background-color: transparent;
+    background-image: url('../images/support.png') !important;
+    background-size: cover;
+}
+
+#designs {
+    background-color: transparent;
+    background-image: url('../images/design.png') !important;
+    background-size: cover;
+}
+
+#resume {
+    background-color: transparent;
+    background-image: url('../images/resume.png') !important;
     background-size: cover;
 }

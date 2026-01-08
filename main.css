@@ -93,6 +93,10 @@ footer {
     height: 24px !important;
 }
 
+.footerTitle:hover {
+    cursor: pointer;
+}
+
 .footerDescription {
     text-align: center;
     font-style: normal;
