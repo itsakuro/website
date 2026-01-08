@@ -3,7 +3,7 @@ const API_URL = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&
 const ITUNES_SEARCH = 'https://itunes.apple.com/search';
 const POLL_INTERVAL_MS = 10_000;
 const FALLBACK = { song: 'Song', artist: 'Artist', image: '' };
-const PREV_MAX = 6;
+const PREV_MAX = 3;
 
 const artworkCache = new Map();
 
@@ -19,12 +19,60 @@ async function fetchAppleArtwork(artist = '', track = '') {
         const data = await res.json();
         const result = data.results && data.results[0];
         let artwork = result?.artworkUrl100 || '';
-        if (artwork) {
-            // prefer larger artwork
-            artwork = artwork.replace(/100x100bb/i, '600x600bb');
+        if (!artwork) {
+            artworkCache.set(key, '');
+            return '';
         }
-        artworkCache.set(key, artwork || '');
-        return artwork || '';
+
+        // prefer larger artwork and try animated variants (webp/gif)
+        let base = artwork.replace(/100x100bb/i, '600x600bb');
+        const root = base.replace(/\.\w+(\?.*)?$/, '');
+        const candidates = [
+            `${root}.webp`,
+            `${root}.gif`,
+            `${root}.jpg`,
+            base
+        ];
+
+        for (const candidate of candidates) {
+            try {
+                const r = await fetch(candidate, { cache: 'no-store' });
+                if (!r.ok) continue;
+                const ct = (r.headers.get('content-type') || '').toLowerCase();
+
+                if (ct.includes('image/webp')) {
+                    // attempt to detect animated WebP by searching for 'ANIM' chunk
+                    try {
+                        const buf = await r.arrayBuffer();
+                        const bytes = new Uint8Array(buf);
+                        const anim = [0x41, 0x4E, 0x49, 0x4D]; // 'ANIM'
+                        let found = false;
+                        for (let i = 0; i <= bytes.length - anim.length; i++) {
+                            if (
+                                bytes[i] === anim[0] &&
+                                bytes[i + 1] === anim[1] &&
+                                bytes[i + 2] === anim[2] &&
+                                bytes[i + 3] === anim[3]
+                            ) { found = true; break; }
+                        }
+                        // prefer an animated webp, but accept static webp as fallback
+                        artworkCache.set(key, candidate);
+                        return candidate;
+                    } catch (err) {
+                        artworkCache.set(key, candidate);
+                        return candidate;
+                    }
+                } else if (ct.startsWith('image/')) {
+                    artworkCache.set(key, candidate);
+                    return candidate;
+                }
+            } catch (err) {
+                continue;
+            }
+        }
+
+        artworkCache.set(key, '');
+        return '';
     } catch (err) {
         console.warn('fetchAppleArtwork failed:', err);
         artworkCache.set(key, '');
