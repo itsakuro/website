@@ -92,7 +92,7 @@ async function fetchNowPlaying() {
         return {
             song: track?.name || FALLBACK.song,
             artist: track?.artist?.['#text'] || FALLBACK.artist,
-            image: track?.image?.[3]?.['#text'] || FALLBACK.image,
+            image: track?.image[0].['#text'] || FALLBACK.image,
             nowplaying: track?.['@attr']?.nowplaying === 'true',
             tracks // full array for previous songs
         };
